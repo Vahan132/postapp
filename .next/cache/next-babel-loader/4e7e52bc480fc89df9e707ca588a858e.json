@@ -1,0 +1,1 @@
+{"ast":null,"code":"export default function Post() {}","map":{"version":3,"sources":["E:/postapp/components/post.js"],"names":["Post"],"mappings":"AAAA,eAAe,SAASA,IAAT,GAAgB,CAE9B","sourcesContent":["export default function Post() {\r\n\r\n}"]},"metadata":{},"sourceType":"module"}
