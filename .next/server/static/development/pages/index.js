@@ -451,12 +451,24 @@ function PostList({
     1: setPosts
   } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]);
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(() => {
-    (async () => {
-      const res = await fetch(`https://jsonplaceholder.typicode.com/posts`);
-      const data = await res.json();
-      window.localStorage.setItem("posts", JSON.stringify(data));
-      setPosts(data);
-    })().catch(error => console.log(error));
+    const storage = window.localStorage;
+    const postsCreateDate = +storage.getItem("postsCreatedAt");
+    const date = new Date().getTime();
+    const isOneDayDiff = (date - postsCreateDate) / 60 / 60 >= 24;
+    const posts = storage.getItem("posts");
+
+    if (!posts || isOneDayDiff) {
+      (async () => {
+        const res = await fetch(`https://jsonplaceholder.typicode.com/posts`);
+        const data = await res.json();
+        const postsCreatedAt = new Date().getTime() + "";
+        storage.setItem("posts", JSON.stringify(data));
+        storage.setItem("postsCreatedAt", postsCreatedAt);
+        setPosts(data);
+      })().catch(error => console.log(error));
+    } else {
+      setPosts(JSON.parse(posts));
+    }
   }, []);
 
   const handlePostClick = event => {
@@ -468,17 +480,17 @@ function PostList({
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 24,
+      lineNumber: 35,
       columnNumber: 13
     }
-  }, "Posts Page"), __jsx("ul", {
+  }, "Posts Page"), posts.length !== 0 ? __jsx("ul", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 25,
-      columnNumber: 13
+      lineNumber: 38,
+      columnNumber: 17
     }
-  }, posts.length !== 0 && posts.map(element => {
+  }, posts.map(element => {
     return __jsx("li", {
       key: element.id,
       onClick: handlePostClick,
@@ -486,32 +498,39 @@ function PostList({
       __self: this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 30,
-        columnNumber: 29
+        lineNumber: 42,
+        columnNumber: 33
       }
     }, __jsx("div", {
       __self: this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 31,
-        columnNumber: 33
+        lineNumber: 43,
+        columnNumber: 37
       }
     }, "User: ", element.userId), __jsx("div", {
       __self: this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 32,
-        columnNumber: 33
+        lineNumber: 44,
+        columnNumber: 37
       }
     }, "Post Title: ", element.title), __jsx("div", {
       __self: this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 33,
-        columnNumber: 33
+        lineNumber: 45,
+        columnNumber: 37
       }
     }, "Post Body: ", element.body));
-  })));
+  })) : __jsx("div", {
+    __self: this,
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 51,
+      columnNumber: 21
+    }
+  }, "Loading..."));
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (PostList);

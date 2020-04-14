@@ -392,34 +392,46 @@ function PostList(_ref) {
       setPosts = _useState[1];
 
   Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
-    (function _callee() {
-      var res, data;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              _context.next = 2;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(fetch("https://jsonplaceholder.typicode.com/posts"));
+    var storage = window.localStorage;
+    var postsCreateDate = +storage.getItem("postsCreatedAt");
+    var date = new Date().getTime();
+    var isOneDayDiff = (date - postsCreateDate) / 60 / 60 >= 24;
+    var posts = storage.getItem("posts");
 
-            case 2:
-              res = _context.sent;
-              _context.next = 5;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(res.json());
+    if (!posts || isOneDayDiff) {
+      (function _callee() {
+        var res, data, postsCreatedAt;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(fetch("https://jsonplaceholder.typicode.com/posts"));
 
-            case 5:
-              data = _context.sent;
-              window.localStorage.setItem("posts", JSON.stringify(data));
-              setPosts(data);
+              case 2:
+                res = _context.sent;
+                _context.next = 5;
+                return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(res.json());
 
-            case 8:
-            case "end":
-              return _context.stop();
+              case 5:
+                data = _context.sent;
+                postsCreatedAt = new Date().getTime() + "";
+                storage.setItem("posts", JSON.stringify(data));
+                storage.setItem("postsCreatedAt", postsCreatedAt);
+                setPosts(data);
+
+              case 10:
+              case "end":
+                return _context.stop();
+            }
           }
-        }
-      }, null, null, null, Promise);
-    })()["catch"](function (error) {
-      return console.log(error);
-    });
+        }, null, null, null, Promise);
+      })()["catch"](function (error) {
+        return console.log(error);
+      });
+    } else {
+      setPosts(JSON.parse(posts));
+    }
   }, []);
 
   var handlePostClick = function handlePostClick(event) {
@@ -431,17 +443,17 @@ function PostList(_ref) {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 24,
+      lineNumber: 35,
       columnNumber: 13
     }
-  }, "Posts Page"), __jsx("ul", {
+  }, "Posts Page"), posts.length !== 0 ? __jsx("ul", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 25,
-      columnNumber: 13
+      lineNumber: 38,
+      columnNumber: 17
     }
-  }, posts.length !== 0 && posts.map(function (element) {
+  }, posts.map(function (element) {
     return __jsx("li", {
       key: element.id,
       onClick: handlePostClick,
@@ -449,32 +461,39 @@ function PostList(_ref) {
       __self: _this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 30,
-        columnNumber: 29
+        lineNumber: 42,
+        columnNumber: 33
       }
     }, __jsx("div", {
       __self: _this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 31,
-        columnNumber: 33
+        lineNumber: 43,
+        columnNumber: 37
       }
     }, "User: ", element.userId), __jsx("div", {
       __self: _this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 32,
-        columnNumber: 33
+        lineNumber: 44,
+        columnNumber: 37
       }
     }, "Post Title: ", element.title), __jsx("div", {
       __self: _this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 33,
-        columnNumber: 33
+        lineNumber: 45,
+        columnNumber: 37
       }
     }, "Post Body: ", element.body));
-  })));
+  })) : __jsx("div", {
+    __self: this,
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 51,
+      columnNumber: 21
+    }
+  }, "Loading..."));
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (PostList);

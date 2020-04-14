@@ -3,15 +3,26 @@ import {useEffect, useState} from "react";
 function PostList({handlePostOpen}) {
     const [posts, setPosts] = useState([]);
     useEffect(() => {
-        (
-            async () => {
-                const res = await fetch(`https://jsonplaceholder.typicode.com/posts`);
-                const data = await res.json();
+        const storage = window.localStorage;
+        const postsCreateDate = +storage.getItem("postsCreatedAt");
+        const date = new Date().getTime();
+        const isOneDayDiff = (date - postsCreateDate)/60/60 >= 24;
+        const posts = storage.getItem("posts");
+        if (!posts || isOneDayDiff) {
+            (
+                async () => {
+                    const res = await fetch(`https://jsonplaceholder.typicode.com/posts`);
+                    const data = await res.json();
 
-                window.localStorage.setItem("posts", JSON.stringify(data));
-                setPosts(data);
-            }
-        )().catch((error) => console.log(error))
+                    const postsCreatedAt = new Date().getTime() + "";
+                    storage.setItem("posts", JSON.stringify(data));
+                    storage.setItem("postsCreatedAt", postsCreatedAt);
+                    setPosts(data);
+                }
+            )().catch((error) => console.log(error))
+        } else {
+            setPosts(JSON.parse(posts))
+        }
     }, []);
 
     const handlePostClick = (event) => {
@@ -22,20 +33,23 @@ function PostList({handlePostOpen}) {
     return (
         <>
             <div>Posts Page</div>
-            <ul>
-                {
-                    posts.length !== 0 &&
-                    posts.map((element) => {
-                        return (
-                            <li key={element.id} onClick={handlePostClick} data-id={element.id}>
-                                <div>User: {element.userId}</div>
-                                <div>Post Title: {element.title}</div>
-                                <div>Post Body: {element.body}</div>
-                            </li>
-                        )
-                    })
-                }
-            </ul>
+            {
+                posts.length !== 0 ?
+                <ul>
+                    {
+                        posts.map((element) => {
+                            return (
+                                <li key={element.id} onClick={handlePostClick} data-id={element.id}>
+                                    <div>User: {element.userId}</div>
+                                    <div>Post Title: {element.title}</div>
+                                    <div>Post Body: {element.body}</div>
+                                </li>
+                            )
+                        })
+                    }
+                </ul> :
+                    <div>Loading...</div>
+            }
         </>
     )
 }
