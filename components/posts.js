@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
+import {title, list, listElementStyle, logOutButton} from "./style";
 
-function PostList({handlePostOpen}) {
+function PostList({handlePostOpen, handleSignOut}) {
     const [posts, setPosts] = useState([]);
     useEffect(() => {
         const storage = window.localStorage;
@@ -30,24 +31,31 @@ function PostList({handlePostOpen}) {
         handlePostOpen(id)
     };
 
+    const handleLogOut = () => {
+        handleSignOut()
+    };
+
     return (
         <>
-            <div>Posts Page</div>
             {
                 posts.length !== 0 ?
-                <ul>
-                    {
-                        posts.map((element) => {
-                            return (
-                                <li key={element.id} onClick={handlePostClick} data-id={element.id}>
-                                    <div>User: {element.userId}</div>
-                                    <div>Post Title: {element.title}</div>
-                                    <div>Post Body: {element.body}</div>
-                                </li>
-                            )
-                        })
-                    }
-                </ul> :
+                    <>
+                        <div>Posts Page</div>
+                        <button style={logOutButton} onClick={handleLogOut}>Log Out</button>
+                        <ul style={list}>
+                            {
+                                posts.map((element) => {
+                                    return (
+                                        <li style={listElementStyle} key={element.id} onClick={handlePostClick} data-id={element.id}>
+                                            <div>User: {element.userId}</div>
+                                            <div style={title}>{element.title}</div>
+                                            <div>{element.body}</div>
+                                        </li>
+                                    )
+                                })
+                            }
+                        </ul>
+                    </> :
                     <div>Loading...</div>
             }
         </>

@@ -1,10 +1,7 @@
 import {useEffect, useState} from "react";
+import {list, postStyle, title, listElementStyle, backButton, logOutButton} from "./style"
 
-const postStyle = {
-    display: "flex",
-    flexDirection: "column"
-};
-export default function Post({handlePostListOpen, id}) {
+export default function Post({handlePostListOpen, handleSignOut, id}) {
     const [post, setPost] = useState(null);
     useEffect(() => {
         const storage = window.localStorage;
@@ -30,20 +27,25 @@ export default function Post({handlePostListOpen, id}) {
         handlePostListOpen();
     };
 
+    const handleLogOut = () => {
+        handleSignOut();
+    };
+
     return (
         <>
             {
                 post ? <div style={postStyle}>
-                    <button onClick={handleBackClick}>Back to posts page</button>
+                    <button style={backButton} onClick={handleBackClick}>Back to posts page</button>
+                    <button style={logOutButton} onClick={handleLogOut}>Log Out</button>
                     <span> User: {post.userId}</span>
-                    <span>Post Title: {post.title}</span>
-                    <span>Post Body: {post.body}</span>
-                    <ul>
+                    <span style={title}>{post.title}</span>
+                    <span>{post.body}</span>
+                    <ul style={list}>
                         {
                             post.comments &&
                             post.comments.map((comment) => {
                                 return (
-                                    <li key={comment.id}>
+                                    <li style={listElementStyle} key={comment.id}>
                                         <div>Username: {comment.name}</div>
                                         <div>{comment.body}</div>
                                     </li>

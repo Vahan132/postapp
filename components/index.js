@@ -42,6 +42,15 @@ export default function Index(token) {
         setPage(false);
     };
 
+    const handleSignOut = () => {
+        window.localStorage.setItem("token", "");
+        if (postId !== "") {
+            window.localStorage.setItem("postId", "");
+            setPostId("");
+        }
+        setPage(true);
+    };
+
     const drawPage = () => {
         if (isLoginPage) {
             return (
@@ -49,20 +58,20 @@ export default function Index(token) {
             )
         } else if (postId === "") {
             return (
-                <PostList handlePostOpen={handlePostOpen} />
+                <PostList handlePostOpen={handlePostOpen} handleSignOut={handleSignOut} />
             )
         } else {
             return (
-                <Post handlePostListOpen={handlePostListOpen} id={postId}/>
+                <Post handlePostListOpen={handlePostListOpen} handleSignOut={handleSignOut} id={postId}/>
             )
         }
     };
 
     return (
-        <div>
+        <>
             {
                 drawPage()
             }
-        </div>
+        </>
     );
 }

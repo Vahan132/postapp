@@ -10,6 +10,20 @@ class MyApp extends App {
         return (
             <Provider store={store}>
                 <Index/>
+                <style jsx global>{`
+                    html, body, #__next {
+                        width: 100%;
+                        height: 100%;
+                        font-family: sans-serif;
+                    }
+                    
+                    #__next {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        flex-direction: column
+                    }
+                `}</style>
             </Provider>
         );
     }

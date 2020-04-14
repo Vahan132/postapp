@@ -1,5 +1,5 @@
-import Link from 'next/link';
 import React, {useState} from "react";
+import {loginForm} from "./style"
 
 export default function Login({handleSignIn}) {
     const [login, setLogin] = useState("");
@@ -21,7 +21,7 @@ export default function Login({handleSignIn}) {
     };
 
     return (
-        <div>
+        <div style={loginForm}>
             <input placeholder="login" value={login} onChange={handleLoginChange}/>
             <input placeholder="password" value={password} onChange={handlePasswordChange}/>
             <button onClick={handleLogIn}>Log in</button>
